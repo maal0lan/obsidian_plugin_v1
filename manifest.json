@@ -2,10 +2,8 @@
 	"id": "md2html",
 	"name": "md2html",
 	"version": "1.0.0",
-	"minAppVersion": "0.15.0",
+	"minAppVersion": "0.1.0",
 	"description": "converts markdown file to html files with builtin css for easy hosting",
-	"author": "Obsidian",
-	"authorUrl": "https://obsidian.md",
-	"fundingUrl": "https://obsidian.md/pricing",
+	"author": "maalolan",
 	"isDesktopOnly": false
 }
