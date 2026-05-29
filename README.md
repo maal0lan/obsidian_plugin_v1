@@ -25,15 +25,16 @@
 ### 1. Basic Conversion Test
 
 1. Open any Markdown note in your vault (or create a new one)
-2. Press `Ctrl+P` to open the command palette
-3. Type "Convert current Markdown to HTML" and select it
-4. You should see a notice like: 📄 Exported to HTML: [path/to/your/file.html]
+2. run `npm run dev ` on the plugin before opening the folder forgot to say it before (for testing purpose bro aparum adhu ae varum)
+3. Press `Ctrl+P` to open the command palette
+4. Type "Convert current Markdown to HTML" and select it
+5. You should see a notice like: 📄 Exported to HTML: [path/to/your/file.html]
 
 ### 2. Verify Output
 
 1. Check that an HTML file was created:
    - If you didn't set an export folder: same folder as your Markdown file
-   - If you set an export folder: in that specified folder
+   - If you set an export folder: in that specified folder this one works well bro we can add in pipline later for vercel deployments.
 2. Open the HTML file in a web browser to verify:
    - The Markdown was converted correctly
    - The selected theme (light/dark/blue) is applied
@@ -74,7 +75,6 @@ Settings are stored in:
 Example:
 ```json
 {
-  "mySetting": "test",
   "exportTheme": "dark",
   "exportPath": "D:/MyExports"
 }
