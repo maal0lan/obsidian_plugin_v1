@@ -28,6 +28,10 @@ export default class MyPlugin extends Plugin {
 		await saveExportSettings(this, this.settings);
 	}
 
+	async saveSettings(): Promise<void> {
+		await this.saveData(this.settings);
+	}
+
 	// 🔥 FIXED Python finder
 	private findPython(): string {
 		const commands = ['python', 'python3', 'py'];
@@ -64,22 +68,28 @@ export default class MyPlugin extends Plugin {
 		const settings = await loadExportSettings(this);
 
 		const basePath = (this.app.vault.adapter as any).getBasePath();
-
-		// ✅ FIXED PATHS
 		const inputPath = path.join(basePath, activeFile.path);
 
-		let outputDir = settings.exportPath.trim();
-		if (!outputDir) {
-			outputDir = activeFile.parent?.path ?? '';
-		}
+		let outputPath: string;
+		const custom = settings.exportPath.trim();
 
-		const outputPath = path.join(basePath, outputDir, activeFile.basename + '.html');
+		if (!custom) {
+			outputPath = path.join(
+				basePath,
+				activeFile.parent?.path || '',
+				activeFile.basename + '.html'
+			);
+		} else if (path.isAbsolute(custom)) {
+			outputPath = path.join(custom, activeFile.basename + '.html');
+		} else {
+			outputPath = path.join(basePath, custom, activeFile.basename + '.html');
+		}
 
 		const scriptPath = path.join(
 			basePath,
 			'.obsidian',
 			'plugins',
-			'obsidian-sample-plugin',
+			'md2html',
 			'md2html.py'
 		);
 
@@ -88,10 +98,15 @@ export default class MyPlugin extends Plugin {
 		console.log('SCRIPT:', scriptPath);
 		console.log('INPUT:', inputPath);
 		console.log('OUTPUT:', outputPath);
-
+		
 		if (!fs.existsSync(scriptPath)) {
 			new Notice('❌ md2html.py not found');
 			return;
+		}
+
+		const outputDir = path.dirname(outputPath);
+		if (!fs.existsSync(outputDir)) {
+			fs.mkdirSync(outputDir, { recursive: true });
 		}
 
 		const pythonPath = this.findPython();
@@ -100,38 +115,31 @@ export default class MyPlugin extends Plugin {
 			return;
 		}
 
-		// 🔥 FIXED COMMAND (backticks + clean paths)
-		//const command = `"${pythonPath}" "${scriptPath}" "${inputPath}" "${outputPath}"`;
-
-		///console.log('COMMAND:', command);'''
-
-		// 🔥 WINDOWS SAFE EXECUTION
 		execFile(
-	pythonPath,
-	[
-		scriptPath,
-		inputPath,
-		'-o',
-		outputPath,
-		'-t',
-		this.settings.exportTheme || 'light'
-	],
-	{ windowsHide: true },
-	(error: any, stdout: string, stderr: string) => {
-		if (error) {
-			console.error('EXEC ERROR:', error);
-			console.error('STDOUT:', stdout);
-			console.error('STDERR:', stderr);
-			new Notice('❌ Conversion failed');
-			return;
-		}
+			pythonPath,
+			[
+				scriptPath,
+				inputPath,
+				'-o',
+				outputPath,
+				'-t',
+				this.settings.exportTheme || 'light'
+			],
+			{ windowsHide: true },
+			(error: any, stdout: string, stderr: string) => {
+				if (error) {
+					console.error('EXEC ERROR:', error);
+					console.error('STDOUT:', stdout);
+					console.error('STDERR:', stderr);
+					console.log('STDOUT:', stdout);
+					console.log('STDERR:', stderr);
+					new Notice('❌ Conversion failed');
+					return;
+				}
 
-		console.log('STDOUT:', stdout);
-		console.log('STDERR:', stderr);
-
-		new Notice('✅ HTML exported successfully');
-	}
-);
+				new Notice(`✅ Exported: ${activeFile.basename}.html`);
+			}
+		);
 	}
 }
 

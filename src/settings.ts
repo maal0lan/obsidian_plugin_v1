@@ -1,5 +1,5 @@
 import {App, PluginSettingTab, Setting, TFile} from "obsidian";
-import MyPlugin from "./main";
+import MyPlugin from "./main.js";
 
 export interface MyPluginSettings {
   mySetting: string;
@@ -26,16 +26,16 @@ export class SampleSettingTab extends PluginSettingTab {
     containerEl.empty();
 
     // Existing setting (unchanged)
-    new Setting(containerEl)
-      .setName('Settings #1')
-      .setDesc('It\'s a secret')
-      .addText(text => text
-        .setPlaceholder('Enter your secret')
-        .setValue(this.plugin.settings.mySetting)
-        .onChange(async (value) => {
-          this.plugin.settings.mySetting = value;
-          await this.plugin.saveSettings();
-        }));
+   // new Setting(containerEl)
+     // .setName('Settings #1')
+      //.setDesc('It\'s a secret')
+//      .addText(text => text
+  //      .setPlaceholder('Enter your secret')
+    //    .setValue(this.plugin.settings.mySetting)
+      //  .onChange(async (value) => {
+        //  this.plugin.settings.mySetting = value;
+//          await this.plugin.saveSettings();
+  //      }));
 
     // Theme selector
     new Setting(containerEl)

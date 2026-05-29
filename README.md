@@ -1,90 +1,110 @@
-# Obsidian Sample Plugin
+# Testing Guide for Obsidian Sample Plugin with Markdown to HTML Conversion
 
-This is a sample plugin for Obsidian (https://obsidian.md).
+## Prerequisites
 
-This project uses TypeScript to provide type checking and documentation.
-The repo depends on the latest plugin API (obsidian.d.ts) in TypeScript Definition format, which contains TSDoc comments describing what it does.
+1. **Python must be installed and available in your PATH**
+   - To verify: Open a terminal/command prompt and run `python --version` or `python3 --version`
+   - If you get an error, install Python from https://www.python.org/downloads/
+   - On Windows, make sure to check "Add Python to PATH" during installation
 
-This sample plugin demonstrates some of the basic functionality the plugin API can do.
-- Adds a ribbon icon, which shows a Notice when clicked.
-- Adds a command "Open modal (simple)" which opens a Modal.
-- Adds a plugin setting tab to the settings page.
-- Registers a global click event and output 'click' to the console.
-- Registers a global interval which logs 'setInterval' to the console.
+2. **Obsidian Developer Mode enabled**
+   - Settings → About → Toggle "Developer mode" ON
 
-## First time developing plugins?
+## Installation
 
-Quick starting guide for new plugin devs:
+1. The plugin should already be built (you just ran `npm run build` successfully)
+2. In Obsidian:
+   - Settings → Community plugins
+   - Click "Open plugins folder"
+   - Verify you see the `obsidian-sample-plugin` folder
+   - Go back to Community plugins
+   - Toggle "Sample Plugin" ON
 
-- Check if [someone already developed a plugin for what you want](https://obsidian.md/plugins)! There might be an existing plugin similar enough that you can partner up with.
-- Make a copy of this repo as a template with the "Use this template" button (login to GitHub if you don't see it).
-- Clone your repo to a local development folder. For convenience, you can place this folder in your `.obsidian/plugins/your-plugin-name` folder.
-- Install NodeJS, then run `npm i` in the command line under your repo folder.
-- Run `npm run dev` to compile your plugin from `main.ts` to `main.js`.
-- Make changes to `main.ts` (or create new `.ts` files). Those changes should be automatically compiled into `main.js`.
-- Reload Obsidian to load the new version of your plugin.
-- Enable plugin in settings window.
-- For updates to the Obsidian API run `npm update` in the command line under your repo folder.
+## Testing Steps
 
-## Releasing new releases
+### 1. Basic Conversion Test
 
-- Update your `manifest.json` with your new version number, such as `1.0.1`, and the minimum Obsidian version required for your latest release.
-- Update your `versions.json` file with `"new-plugin-version": "minimum-obsidian-version"` so older versions of Obsidian can download an older version of your plugin that's compatible.
-- Create new GitHub release using your new version number as the "Tag version". Use the exact version number, don't include a prefix `v`. See here for an example: https://github.com/obsidianmd/obsidian-sample-plugin/releases
-- Upload the files `manifest.json`, `main.js`, `styles.css` as binary attachments. Note: The manifest.json file must be in two places, first the root path of your repository and also in the release.
-- Publish the release.
+1. Open any Markdown note in your vault (or create a new one)
+2. Press `Ctrl+P` to open the command palette
+3. Type "Convert current Markdown to HTML" and select it
+4. You should see a notice like: 📄 Exported to HTML: [path/to/your/file.html]
 
-> You can simplify the version bump process by running `npm version patch`, `npm version minor` or `npm version major` after updating `minAppVersion` manually in `manifest.json`.
-> The command will bump version in `manifest.json` and `package.json`, and add the entry for the new version to `versions.json`
+### 2. Verify Output
 
-## Adding your plugin to the community plugin list
+1. Check that an HTML file was created:
+   - If you didn't set an export folder: same folder as your Markdown file
+   - If you set an export folder: in that specified folder
+2. Open the HTML file in a web browser to verify:
+   - The Markdown was converted correctly
+   - The selected theme (light/dark/blue) is applied
 
-- Check the [plugin guidelines](https://docs.obsidian.md/Plugins/Releasing/Plugin+guidelines).
-- Publish an initial version.
-- Make sure you have a `README.md` file in the root of your repo.
-- Make a pull request at https://github.com/obsidianmd/obsidian-releases to add your plugin.
+### 3. Test Settings
 
-## How to use
+1. Go to Obsidian Settings → "Sample Plugin" in the left sidebar
+2. Try changing:
+   - Export Theme (Light/Dark/Blue)
+   - Export Folder (leave empty or set a path)
+3. Close settings and run the conversion command again
+4. Verify the output reflects your changes
 
-- Clone this repo.
-- Make sure your NodeJS is at least v16 (`node --version`).
-- `npm i` or `yarn` to install dependencies.
-- `npm run dev` to start compilation in watch mode.
+### 4. Test Error Handling
 
-## Manually installing the plugin
+1. Try running the command when no Markdown file is open
+2. You should see: "Please open a Markdown file first."
+3. Try renaming or deleting `md2html.py` temporarily
+4. Run the command and check for appropriate error notice
 
-- Copy over `main.js`, `styles.css`, `manifest.json` to your vault `VaultFolder/.obsidian/plugins/your-plugin-id/`.
+## Expected Behavior
 
-## Improve code quality with eslint
-- [ESLint](https://eslint.org/) is a tool that analyzes your code to quickly find problems. You can run ESLint against your plugin to find common bugs and ways to improve your code. 
-- This project already has eslint preconfigured, you can invoke a check by running`npm run lint`
-- Together with a custom eslint [plugin](https://github.com/obsidianmd/eslint-plugin) for Obsidan specific code guidelines.
-- A GitHub action is preconfigured to automatically lint every commit on all branches.
+### Success Case
+- Notice: 📄 Exported to HTML: [full/path/to/file.html]
+- HTML file created in specified location
+- File contains properly formatted HTML with selected theme CSS
 
-## Funding URL
+### Error Cases
+- No Markdown open: "Please open a Markdown file first."
+- Python not found: "❌ Error spawning Python: [error details]"
+- Conversion fails: "❌ Conversion failed (code [number]). See console for details."
 
-You can include funding URLs where people who use your plugin can financially support it.
+## Configuration
 
-The simple way is to set the `fundingUrl` field to your link in your `manifest.json` file:
+Settings are stored in:
+`.obsidian/plugins/obsidian-sample-plugin/data.json`
 
+Example:
 ```json
 {
-    "fundingUrl": "https://buymeacoffee.com"
+  "mySetting": "test",
+  "exportTheme": "dark",
+  "exportPath": "D:/MyExports"
 }
 ```
 
-If you have multiple URLs, you can also do:
+## Troubleshooting
 
-```json
-{
-    "fundingUrl": {
-        "Buy Me a Coffee": "https://buymeacoffee.com",
-        "GitHub Sponsor": "https://github.com/sponsors",
-        "Patreon": "https://www.patreon.com/"
-    }
-}
-```
+### "Spawn python ENOENT" Error
+This means Python wasn't found in your system PATH. Solutions:
+1. Install Python from https://www.python.org/downloads/
+2. On Windows, reinstall and check "Add Python to PATH"
+3. On Mac/Linux, ensure python3 is installed and in PATH
+4. Restart Obsidian after installing Python
 
-## API Documentation
+### No Notice Appears
+1. Open DevTools in Obsidian (`Ctrl+Shift+I` or `Cmd+Option+I`)
+2. Check the Console tab for error messages
+3. Verify the plugin is enabled in Community plugins
 
-See https://docs.obsidian.md
+### HTML File Not Created
+1. Check the notice for the output path
+2. Verify that folder exists and is writable
+3. Check Console for any Python script errors
+
+## Notes
+
+- The plugin uses your system's Python installation
+- First run may take a moment as it locates the Python executable
+- Subsequent conversions should be faster
+- The plugin works with any valid Markdown file
+- HTML output includes full HTML document with embedded CSS theme
+
+Enjoy converting your Markdown notes to beautiful HTML files! 🚀
