@@ -13,12 +13,18 @@ export default class MyPlugin extends Plugin {
 		console.log('Loaded settings:', this.settings);
 
 		this.addCommand({
-			id: 'convert-md-to-html',
-			name: 'Convert current Markdown to HTML',
-			editorCallback: async () => {
-				await this.convertActiveFile();
-			}
-		});
+	id: "convert-md-to-html",
+	name: "Convert current Markdown to HTML",
+	checkCallback: (checking) => {
+		const file = this.app.workspace.getActiveFile();
+		if (!file || file.extension !== "md") return false;
+
+		if (!checking) {
+			this.convertActiveFile();
+		}
+		return true;
+	}
+});
 
 		this.addSettingTab(new SampleSettingTab(this.app, this));
 	}
