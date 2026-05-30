@@ -89,7 +89,7 @@ export default class MyPlugin extends Plugin {
 			basePath,
 			'.obsidian',
 			'plugins',
-			'md2html',
+			this.manifest.id,
 			'md2html.py'
 		);
 

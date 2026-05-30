@@ -5,5 +5,8 @@
 	"minAppVersion": "0.1.0",
 	"description": "converts markdown file to html files with builtin css for easy hosting",
 	"author": "maalolan",
+	"authorUrl": "https://github.com/maal0lan",
+	"fundingUrl": "i dont have bank account and im 20 rn 😈",
 	"isDesktopOnly": false
+	
 }
