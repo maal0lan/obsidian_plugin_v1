@@ -1,4 +1,4 @@
-# Testing Guide for Obsidian Sample Plugin with Markdown to HTML Conversion
+# Testing Guide for Obsidian Sample Plugin with Markdown to HTML Conversion md2html
 
 ## Prerequisites
 

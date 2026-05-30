@@ -3,7 +3,7 @@
 	"version": "2.0.0",
 	"minAppVersion": "0.15.0",
 	"description": "converts markdown file to html files with builtin css for easy hosting",
-	"authon":"maalolan"
+	"author":"maalolan",
 	"authorUrl": "https://github.com/maal0lan",
 	"isDesktopOnly": true
 }
